@@ -41,7 +41,7 @@ The **Cost Estimator Tool** is a web-based application designed to help sales te
    cd backend
    pip install -r requirements.txt
    
-4. Start:   
+4. Start servers:   
    ```bash
    python app.py
    npm start
