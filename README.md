@@ -30,12 +30,18 @@ The **Cost Estimator Tool** is a web-based application designed to help sales te
 1. Clone the repository:
    ```bash
    git clone https://github.com/your-username/cost-estimator-tool.git
-2. cd frotnend
+   
+2. Set up Frontend
+   ```bash
+   cd frotnend
    npm install
    
-3. cd backend
+3. Backend Setup
+   ```bash
+   cd backend
    pip install -r requirements.txt
    
-4. python app.py
-
-5. npm start
+4. Start:   
+   ```bash
+   python app.py
+   npm start
