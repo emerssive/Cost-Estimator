@@ -5,6 +5,7 @@ import ResultsTable from './ResultsTable';
 function ProjectForm() {
     const [projectName, setProjectName] = useState('');
     const [projectSize, setProjectSize] = useState('');
+    const [industry, setIndustry] = useState(''); // New state for industry
     const [budget, setBudget] = useState('');
     const [timeline, setTimeline] = useState('');
     const [additionalInfo, setAdditionalInfo] = useState('');
@@ -15,6 +16,7 @@ function ProjectForm() {
     const [errors, setErrors] = useState({
         projectName: false,
         projectSize: false,
+        industry: false, // New validation for industry
         budget: false,
         timeline: false,
         fileUpload: false,
@@ -32,6 +34,7 @@ function ProjectForm() {
         const newErrors = {
             projectName: !projectName,
             projectSize: !projectSize,
+            industry: !industry, // Validate industry selection
             budget: !budget,
             timeline: !timeline,
             fileUpload: !fileUpload || !validateFileType(fileUpload),
@@ -75,6 +78,27 @@ function ProjectForm() {
                         <option value="Large">Large</option>
                     </select>
                     {errors.projectSize && <p className="error">Project size is required.</p>}
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="industry">Industry</label>
+                    <select
+                        id="industry"
+                        value={industry}
+                        onChange={(e) => setIndustry(e.target.value)}
+                        required
+                    >
+                        <option value="">Select Industry</option>
+                        <option value="Ecommerce">Ecommerce</option>
+                        <option value="Software Development">Software Development</option>
+                        <option value="Healthcare">Healthcare</option>
+                        <option value="Finance">Finance</option>
+                        <option value="Education">Education</option>
+                        <option value="Real Estate">Real Estate</option>
+                        <option value="Manufacturing">Manufacturing</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    {errors.industry && <p className="error">Industry is required.</p>}
                 </div>
 
                 <div className="form-group">
@@ -129,6 +153,7 @@ function ProjectForm() {
                 <ResultsTable
                     projectName={projectName}
                     projectSize={projectSize}
+                    industry={industry} // Pass industry to ResultsTable
                     budget={budget}
                     timeline={timeline}
                     additionalInfo={additionalInfo}
