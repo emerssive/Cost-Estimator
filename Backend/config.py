@@ -2,6 +2,8 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import signal
 import sys
+import anthropic
+
 
 # Initialize the database
 db = SQLAlchemy()
