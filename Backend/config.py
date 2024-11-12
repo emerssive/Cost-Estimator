@@ -3,16 +3,17 @@ from flask_sqlalchemy import SQLAlchemy
 import signal
 import sys
 import anthropic
-
+from dotenv import load_dotenv
+import os
 
 # Initialize the database
 db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__)
-
+    load_dotenv()
     # Configure the PostgreSQL URI
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:12345678@localhost:5432/cost_estimator'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DB_URL")
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # Configure the allowed file extensions
