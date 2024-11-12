@@ -16,6 +16,7 @@ def create_project():
     project_size = request.form['project_size']
     budget = request.form['budget']
     timeline = request.form['timeline']
+    industry = request.form['industry']
     additional_info = request.form.get('additional_info', '')
 
     # Handle file upload and extract text
@@ -36,8 +37,10 @@ def create_project():
             project_size=project_size,
             budget=budget,
             timeline=timeline,
+            industry = industry,
             additional_info=additional_info,
             document_content=document_content
+            
         )
         db.session.add(new_project)
         db.session.commit()  # Commit to get the project_id
@@ -49,6 +52,7 @@ def create_project():
             project_size=project_size,
             budget=budget,
             timeline=timeline,
+            industry = industry,
             additional_info=additional_info,
             document_content=document_content
         )

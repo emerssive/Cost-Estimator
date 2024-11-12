@@ -14,12 +14,28 @@ def get_project_hours(project_size: str) -> int:
     }
     return project_hours.get(project_size.lower(), 200)  # Default to medium if size not found
 
-def calculateEstimates(project_id, project_name, project_size, budget, timeline, additional_info, document_content):
+def get_industry_focus(industry: str) -> list:
+    """Return key focus areas based on industry"""
+    industry_focus = {
+        "e_commerce": ["payment processing", "inventory", "shopping cart", "order management"],
+        "software_development": ["version control", "testing", "deployment", "documentation"],
+        "healthcare": ["patient records", "data privacy", "appointment system", "billing"],
+        "finance": ["transactions", "security", "reporting", "audit trails"],
+        "education": ["content management", "assessment", "user progress", "collaboration"],
+        "real_estate": ["property listings", "search", "client management", "scheduling"],
+        "manufacturing": ["inventory", "process automation", "quality control", "tracking"]
+    }
+    return industry_focus.get(industry.lower().replace(" ", "_"), 
+                            ["user management", "core features", "reporting", "administration"])
+
+
+def calculateEstimates(project_id, project_name, project_size, budget, timeline, industry, additional_info, document_content):
     # Initialize the client
     load_dotenv()
     client = anthropic.Anthropic(api_key=os.getenv("CLAUDE_API_KEY"))
     
     total_hours = get_project_hours(project_size)
+    industry_focus = get_industry_focus(industry)
     
     prompt = f"""Analyze this software project and break it down into tasks and estimates. Key information:
 
@@ -27,6 +43,8 @@ def calculateEstimates(project_id, project_name, project_size, budget, timeline,
         Project Size: {project_size} ({total_hours} hours)
         Budget: {budget}
         Timeline: {timeline}
+        Industry: {industry}
+        Key Industry Focus: {', '.join(industry_focus)}
 
         Additional Context:
         {additional_info}
@@ -35,9 +53,11 @@ def calculateEstimates(project_id, project_name, project_size, budget, timeline,
         {document_content}
 
         Based on the above information:
-        1. Break down the project into major tasks
+        1. Break down the project into major tasks, considering {industry} industry requirements
         2. For each task, create subtasks with time estimates
         3. Total of all subtask hours should sum to approximately {total_hours} hours
+        4. Consider standard {industry} industry features and requirements
+
 
         Please structure your response as a valid JSON object with this exact schema:
 
@@ -68,6 +88,7 @@ def calculateEstimates(project_id, project_name, project_size, budget, timeline,
         - Include relevant technical notes in comments
         - Ensure estimates align with timeline of {timeline}
         - Stay within budget of {budget}
+        - Consider standard {industry} industry features
         - Format output as valid JSON only
 
         Do not include any explanatory text outside the JSON structure."""

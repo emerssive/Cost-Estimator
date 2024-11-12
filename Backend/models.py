@@ -8,6 +8,7 @@ class Project(db.Model):
     project_size = db.Column(db.String(20), nullable=False)
     budget = db.Column(db.Numeric(10, 2), nullable=False)
     timeline = db.Column(db.Integer, nullable=False)
+    industry = db.Column(db.Text)
     additional_info = db.Column(db.Text)
     document_content = db.Column(db.Text)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
