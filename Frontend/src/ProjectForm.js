@@ -2,6 +2,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import ResultsTable from './ResultsTable';
+import { Snackbar, LinearProgress } from '@mui/material';
+import { Alert } from '@mui/material';
+
 
 function ProjectForm() {
     const [projectName, setProjectName] = useState('');
@@ -13,6 +16,10 @@ function ProjectForm() {
     const [fileUpload, setFileUpload] = useState(null);
     const [estimates, setEstimates] = useState(null); // Store estimates data
     const [errors, setErrors] = useState({}); // State to store validation errors
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [snackbarSeverity, setSnackbarSeverity] = useState('error');
+    const [loading, setLoading] = useState(false);
 
     const validateFields = () => {
         const newErrors = {};
@@ -60,8 +67,14 @@ function ProjectForm() {
 
         // Validate all fields
         if (!validateFields()) {
+            setSnackbarMessage('Please fix the errors in the form.');
+            setSnackbarSeverity('error');
+            setOpenSnackbar(true);
             return; // Stop submission if there are validation errors
         }
+
+        setLoading(true);  // Show the loading bar
+        setEstimates(null);
 
         // Use FormData to include file and other data
         const formData = new FormData();
@@ -83,11 +96,31 @@ function ProjectForm() {
                 },
             });
 
-            // Set the estimates data from response to state
-            setEstimates(response.data.estimates);
+            if (response.data.success) {
+                setEstimates(response.data.data.estimates);
+                setSnackbarMessage('Project estimates calculated successfully!');
+                setSnackbarSeverity('success');
+            } else {
+                setSnackbarMessage(response.data.message || 'Something went wrong');
+                setSnackbarSeverity('error');
+            }
+
+            setOpenSnackbar(true);
+
         } catch (error) {
             console.error("Error submitting project details:", error);
+            console.error("Error submitting project details:", error);
+            setSnackbarMessage('An error occurred while submitting the form.');
+            setSnackbarSeverity('error');
+            setOpenSnackbar(true);
         }
+        finally {
+            setLoading(false);  // Hide the loading bar
+        }
+    };
+
+    const handleCloseSnackbar = () => {
+        setOpenSnackbar(false);
     };
 
     return (
@@ -184,6 +217,28 @@ function ProjectForm() {
 
                 <button type="submit" className="submit-button">Submit</button>
             </form>
+
+            {/* Loading Bar */}
+            {loading && (
+                <div style={{ marginTop: '20px' }}>
+                    <LinearProgress sx={{ width: '100%' }} />
+                </div>
+            )}
+
+            {/* Snackbar for errors or success */}
+            <Snackbar
+                open={openSnackbar}
+                autoHideDuration={6000}
+                onClose={handleCloseSnackbar}
+            >
+                <Alert
+                    onClose={handleCloseSnackbar}
+                    severity={snackbarSeverity}
+                    sx={{ width: '100%' }}
+                >
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
 
             {/* Display the estimates in ResultsTable if available */}
             {estimates && <ResultsTable projectData={estimates} />}
