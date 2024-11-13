@@ -1,30 +1,27 @@
-// src/components/ResultsTable.js
-import React from 'react';
 
-function ResultsTable({ projectName, projectSize, budget, timeline, additionalInfo, fileUpload }) {
+import React from 'react';
+function ResultsTable({ projectData }) {
     return (
         <div className="results-table">
-            <h3>Submitted Project Details</h3>
+            <h3>Project Task Details</h3>
             <table>
                 <thead>
                     <tr>
-                        <th>Project Name</th>
-                        <th>Size</th>
-                        <th>Budget (USD)</th>
-                        <th>Timeline (weeks)</th>
-                        <th>Additional Info</th>
-                        <th>Uploaded File</th>
+                        <th>Task</th>
+                        <th>Subtask</th>
+                        <th>Development Hours</th>
+                        <th>Comments/Notes</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>{projectName}</td>
-                        <td>{projectSize}</td>
-                        <td>${budget}</td>
-                        <td>{timeline} weeks</td>
-                        <td>{additionalInfo || 'N/A'}</td>
-                        <td>{fileUpload}</td>
-                    </tr>
+                    {projectData.map((item, index) => (
+                        <tr key={index}>
+                            <td>{item.task}</td>
+                            <td>{item.subtask || 'N/A'}</td>
+                            <td>{item.developmentHours} hours</td>
+                            <td>{item.comments || 'N/A'}</td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
         </div>
