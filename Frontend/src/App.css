@@ -122,26 +122,31 @@ body {
   justify-content: center;
 }
 
-.actions button {
-  padding: 10px 15px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s;
-}
 
 .action-button {
-  padding: 10px 15px;
+  width: 100px; /* Set desired fixed width */
+  height: 40px; /* Set desired fixed height */
+  padding: 0; /* Remove padding as width/height take precedence */
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-size: 1rem;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease;
+}
+
+.export-button{
+  width: 100px; /* Set desired fixed width */
+  height: 50px; /* Set desired fixed height */
+  padding: 0; /* Remove padding as width/height take precedence */
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
 }
 
 .action-button:hover {
