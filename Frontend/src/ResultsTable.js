@@ -15,6 +15,43 @@ function ResultsTable({ projectData, updateEstimates }) {
         setEstimates(updatedEstimates);
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+    
+        setLoading(true);
+    
+        const formData = new FormData();
+        formData.append('project_name', projectName);
+        formData.append('project_size', projectSize);
+        formData.append('industry', industry);
+        formData.append('budget', budget);
+        formData.append('timeline', timeline);
+        formData.append('additional_info', additionalInfo);
+        if (fileUpload) {
+            formData.append('attachment', fileUpload);
+        }
+    
+        try {
+            const response = await axios.post('http://localhost:5000/projectDetails', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+    
+            console.log('Backend response:', response.data); // Log the response to inspect structure
+    
+            // Transform estimates object into an array
+            const estimatesArray = Object.values(response.data.estimates);
+    
+            setEstimates(estimatesArray); // Pass the array to ResultsTable
+        } catch (error) {
+            console.error("Error submitting project details:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    
+
     // Save changes (this could be extended to send updates to a backend)
     const handleSave = () => {
         updateEstimates(estimates); // Pass updated estimates to parent
