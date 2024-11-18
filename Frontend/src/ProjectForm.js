@@ -20,6 +20,9 @@ function ProjectForm() {
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('error');
     const [loading, setLoading] = useState(false);
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+
 
     const validateFields = () => {
         const newErrors = {};
@@ -84,13 +87,16 @@ function ProjectForm() {
         formData.append('budget', budget);
         formData.append('timeline', timeline);
         formData.append('additional_info', additionalInfo);
+        formData.append('start_date', startDate || '');
+        formData.append('end_date', endDate || '');
+
         if (fileUpload) {
             formData.append('attachment', fileUpload);
         }
 
         try {
             // Send the form data to the backend
-            const response = await axios.post('https://b122-2400-adc5-116-a500-00-2.ngrok-free.app/projectDetails', formData, {
+            const response = await axios.post('https://d640-2400-adc5-116-a500-00-2.ngrok-free.app/projectDetails', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -197,6 +203,27 @@ function ProjectForm() {
                 </div>
 
                 <div className="form-group">
+                    <label htmlFor="startDate">Project Start Date (Optional)</label>
+                    <input
+                        type="date"
+                        id="startDate"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="endDate">Project End Date (Optional)</label>
+                    <input
+                        type="date"
+                        id="endDate"
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                    />
+                </div>
+
+
+                <div className="form-group">
                     <label htmlFor="additionalInfo">Additional Information</label>
                     <textarea
                         id="additionalInfo"
@@ -247,3 +274,4 @@ function ProjectForm() {
 }
 
 export default ProjectForm;
+

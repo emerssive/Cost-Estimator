@@ -8,12 +8,21 @@ function ResultsTable({ projectData }) {
     const [tasks, setTasks] = useState(projectData.tasks || []);
     const [editingRow, setEditingRow] = useState({}); // Track which row is being edited
     const [errors, setErrors] = useState({}); // Track errors for validation
+    const [hourlyRate, setHourlyRate] = useState(0); // Hourly rate for calculations
+
+    // Calculate total hours
+    const totalHours = tasks.reduce(
+        (sum, task) =>
+            sum + task.subtasks.reduce((subSum, subtask) => subSum + Number(subtask.hours || 0), 0),
+        0
+    );
 
     // Handle input changes during editing
     const handleChange = (taskIndex, subtaskIndex, field, value) => {
         const updatedTasks = [...tasks];
         updatedTasks[taskIndex].subtasks[subtaskIndex][field] = value;
         setTasks(updatedTasks);
+        console.log('Updated tasks during change:', JSON.stringify(updatedTasks, null, 2)); // Log updated tasks
     };
 
     // Handle save action for a specific row
@@ -27,12 +36,14 @@ function ResultsTable({ projectData }) {
                 subtaskIndex,
                 message: 'Subtask name cannot be empty, and hours must be a positive number.',
             });
+            console.error('Validation error:', errors.message); // Log validation error
             return;
         }
 
         // Clear errors and exit editing mode
         setErrors({});
         setEditingRow({});
+        console.log('Updated tasks after save:', JSON.stringify(tasks, null, 2)); // Log updated tasks after saving
     };
 
     // Export to PDF
@@ -47,6 +58,11 @@ function ResultsTable({ projectData }) {
                 tableData.push(['', subtask, `${hours} hours`, comments || 'N/A']);
             });
         });
+
+        // Add summary rows
+        tableData.push(['', 'Total No. of Hours', `${totalHours} hours`, '']);
+        tableData.push(['', 'Hourly Rate', `$${hourlyRate}`, '']);
+        tableData.push(['', 'Total Cost', `$${(totalHours * hourlyRate).toFixed(2)}`, '']);
 
         autoTable(doc, {
             head: [['Task', 'Subtask', 'Development Hours', 'Comments']],
@@ -113,13 +129,23 @@ function ResultsTable({ projectData }) {
             });
 
             docContent.push(table);
-            docContent.push(
-                new Paragraph({
-                    text: '',
-                    spacing: { after: 400 },
-                })
-            );
         });
+
+        // Add summary
+        docContent.push(
+            new Paragraph({
+                text: `Total No. of Hours: ${totalHours}`,
+                spacing: { after: 200 },
+            }),
+            new Paragraph({
+                text: `Hourly Rate: $${hourlyRate}`,
+                spacing: { after: 200 },
+            }),
+            new Paragraph({
+                text: `Total Cost: $${(totalHours * hourlyRate).toFixed(2)}`,
+                spacing: { after: 200 },
+            })
+        );
 
         const doc = new Document({
             sections: [
@@ -205,17 +231,14 @@ function ResultsTable({ projectData }) {
                                     </td>
                                     <td>
                                         {isEditing ? (
-                                            <>
-                                                <button
-                                                    className='action-button'
-                                                    onClick={() =>
-                                                        handleSave(taskIndex, subIndex)
-                                                    }
-                                                    
-                                                >
-                                                    Save
-                                                </button>
-                                            </>
+                                            <button
+                                                className="action-button"
+                                                onClick={() =>
+                                                    handleSave(taskIndex, subIndex)
+                                                }
+                                            >
+                                                Save
+                                            </button>
                                         ) : (
                                             <button
                                                 className='action-button'
@@ -225,7 +248,7 @@ function ResultsTable({ projectData }) {
                                                         subtaskIndex: subIndex, // Correctly reference subIndex
                                                     })
                                                 }
-                                               
+
                                             >
                                                 Edit
                                             </button>
@@ -235,15 +258,40 @@ function ResultsTable({ projectData }) {
                             );
                         })
                     )}
+                    {/* Summary Rows */}
+                    <tr>
+                        <td colSpan="2"><strong>Total No. of Hours</strong></td>
+                        <td colSpan="2">{totalHours} hours</td>
+                    </tr>
+                    <tr>
+                        <td colSpan="2"><strong>Hourly Rate</strong></td>
+                        <td colSpan="2">
+                            <input
+                                type="number"
+                                value={hourlyRate}
+                                onChange={(e) => setHourlyRate(Number(e.target.value))}
+                                placeholder="Enter rate"
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colSpan="2"><strong>Total Cost</strong></td>
+                        <td colSpan="2">${(totalHours * hourlyRate).toFixed(2)}</td>
+                    </tr>
                 </tbody>
             </table>
             {errors.message && <p className="error">{errors.message}</p>}
-            <div className="actions">
-                <button onClick={exportToPDF}>Export to PDF</button>
-                <button onClick={exportToDOCX}>Export to DOCX</button>
+            <div className="export-buttons">
+                <button className="action-button" onClick={exportToPDF}>
+                    Export to PDF
+                </button>
+                <button className="action-button" onClick={exportToDOCX}>
+                    Export to DOCX
+                </button>
             </div>
         </div>
     );
 }
 
 export default ResultsTable;
+
