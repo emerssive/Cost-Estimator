@@ -1,7 +1,7 @@
 from flask import Blueprint, request, current_app
 from config import db
 from models import Project
-from .utils import calculateEstimates
+from .utils import calculate_estimates
 from file_utils import allowed_file, extract_text_from_txt, extract_text_from_docx, extract_text_from_pdf
 from flask import jsonify
 
@@ -46,12 +46,10 @@ def create_project():
         db.session.commit()  # Commit to get the project_id
 
         # Call calculateEstimates with project details
-        estimates = calculateEstimates(
+        estimates = calculate_estimates(
             project_id=new_project.project_id,
             project_name=project_name,
             project_size=project_size,
-            budget=budget,
-            timeline=timeline,
             industry = industry,
             additional_info=additional_info,
             document_content=document_content
