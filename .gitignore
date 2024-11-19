@@ -1,5 +1,16 @@
-Backend/venv/ 
-Backend/.env
-*.pyc 
+# Ignore node_modules in the frontend directory
+/frontend/node_modules/
+
+# Ignore Backend's virtual environment
+/Backend/venv/
+
+# Ignore Backend's environment file
+/Backend/.env
+
+# Ignore Python bytecode files
+*.pyc
 __pycache__/
+
+# Ignore any virtual environment directory
 /env/
+
