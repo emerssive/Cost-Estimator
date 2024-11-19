@@ -96,7 +96,7 @@ function ProjectForm() {
 
         try {
             // Send the form data to the backend
-            const response = await axios.post('https://d640-2400-adc5-116-a500-00-2.ngrok-free.app/projectDetails', formData, {
+            const response = await axios.post('https://6497-2400-adc5-116-a500-00-2.ngrok-free.app/projectDetails', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

@@ -22,11 +22,11 @@ function ResultsTable({ projectData }) {
         const updatedTasks = [...tasks];
         updatedTasks[taskIndex].subtasks[subtaskIndex][field] = value;
         setTasks(updatedTasks);
-        console.log('Updated tasks during change:', JSON.stringify(updatedTasks, null, 2)); // Log updated tasks
     };
 
     // Handle save action for a specific row
-    const handleSave = (taskIndex, subtaskIndex) => {
+    const handleSave = () => {
+        const { taskIndex, subtaskIndex } = editingRow;
         const subtask = tasks[taskIndex].subtasks[subtaskIndex];
 
         // Validate input
@@ -36,14 +36,12 @@ function ResultsTable({ projectData }) {
                 subtaskIndex,
                 message: 'Subtask name cannot be empty, and hours must be a positive number.',
             });
-            console.error('Validation error:', errors.message); // Log validation error
             return;
         }
 
         // Clear errors and exit editing mode
         setErrors({});
         setEditingRow({});
-        console.log('Updated tasks after save:', JSON.stringify(tasks, null, 2)); // Log updated tasks after saving
     };
 
     // Export to PDF
@@ -177,7 +175,6 @@ function ResultsTable({ projectData }) {
                         <th>Subtask</th>
                         <th>Development Hours</th>
                         <th>Comments</th>
-                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -188,7 +185,10 @@ function ResultsTable({ projectData }) {
                                 editingRow.subtaskIndex === subIndex;
 
                             return (
-                                <tr key={`${taskIndex}-${subIndex}`}>
+                                <tr
+                                    key={`${taskIndex}-${subIndex}`}
+                                    className="hover-row"
+                                >
                                     <td>{subIndex === 0 ? taskItem.task : ''}</td>
                                     <td>
                                         {isEditing ? (
@@ -229,69 +229,36 @@ function ResultsTable({ projectData }) {
                                             subtask.comments || 'N/A'
                                         )}
                                     </td>
-                                    <td>
+                                    <td className="edit-icon-cell">
                                         {isEditing ? (
                                             <button
-                                                className="action-button"
-                                                onClick={() =>
-                                                    handleSave(taskIndex, subIndex)
-                                                }
+                                                className="save-button"
+                                                onClick={handleSave}
                                             >
                                                 Save
                                             </button>
                                         ) : (
-                                            <button
-                                                className='action-button'
+                                            <span
+                                                className="edit-icon"
                                                 onClick={() =>
                                                     setEditingRow({
                                                         taskIndex,
-                                                        subtaskIndex: subIndex, // Correctly reference subIndex
+                                                        subtaskIndex: subIndex,
                                                     })
                                                 }
-
                                             >
-                                                Edit
-                                            </button>
+                                                ✏️
+                                            </span>
                                         )}
                                     </td>
                                 </tr>
                             );
                         })
                     )}
-                    {/* Summary Rows */}
-                    <tr>
-                        <td colSpan="2"><strong>Total No. of Hours</strong></td>
-                        <td colSpan="2">{totalHours} hours</td>
-                    </tr>
-                    <tr>
-                        <td colSpan="2"><strong>Hourly Rate</strong></td>
-                        <td colSpan="2">
-                            <input
-                                type="number"
-                                value={hourlyRate}
-                                onChange={(e) => setHourlyRate(Number(e.target.value))}
-                                placeholder="Enter rate"
-                            />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colSpan="2"><strong>Total Cost</strong></td>
-                        <td colSpan="2">${(totalHours * hourlyRate).toFixed(2)}</td>
-                    </tr>
                 </tbody>
             </table>
-            {errors.message && <p className="error">{errors.message}</p>}
-            <div className="export-buttons">
-                <button className="action-button" onClick={exportToPDF}>
-                    Export to PDF
-                </button>
-                <button className="action-button" onClick={exportToDOCX}>
-                    Export to DOCX
-                </button>
-            </div>
         </div>
     );
 }
 
 export default ResultsTable;
-

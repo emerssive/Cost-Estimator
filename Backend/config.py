@@ -13,7 +13,7 @@ def create_app():
     app = Flask(__name__)
     load_dotenv()
     # Configure the PostgreSQL URI
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DB_URL")
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("postgresql://postgres:12345678@127.0.0.1:5432/postgres")
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # Configure the allowed file extensions
