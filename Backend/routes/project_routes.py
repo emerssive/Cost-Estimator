@@ -1,8 +1,6 @@
-from flask import Blueprint, request, current_app, jsonify
-from config import db
-from models import Project
-from .utils import calculateEstimates
 from file_utils import allowed_file, extract_text_from_txt, extract_text_from_docx, extract_text_from_pdf
+from flask import jsonify
+from .resourcesAllocation import resourceAllocation
 
 # Define the blueprint
 project_routes = Blueprint('project_routes', __name__)
@@ -89,13 +87,17 @@ def create_project():
                 "error": str(e)
             }), 500
 
+        # Call resourceAllocation function
+        resources = resourceAllocation(project_size=project_size)
+
         # Return success response
         return jsonify({
             "success": True,
             "message": f"Project '{project_name}' and estimates added successfully.",
             "data": {
                 "project_id": new_project.project_id,
-                "estimates": estimates
+                "estimates": estimates,
+                "resources": resources
             }
         }), 201
 
