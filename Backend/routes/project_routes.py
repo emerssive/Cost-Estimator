@@ -1,3 +1,7 @@
+from flask import Blueprint, request, current_app
+from config import db
+from models import Project
+from .calculateEstimates import calculate_estimates
 from file_utils import allowed_file, extract_text_from_txt, extract_text_from_docx, extract_text_from_pdf
 from flask import jsonify
 from .resourcesAllocation import resourceAllocation
@@ -17,7 +21,7 @@ def create_project():
         additional_info = request.form.get('additional_info', '')
 
         # Validate required fields
-        if not project_name or not project_size or not budget or not timeline or not industry:
+        if not project_name or not project_size or not budget or not industry:
             return jsonify({
                 "success": False,
                 "message": "All required fields (project_name, project_size, budget, timeline, industry) must be provided."
@@ -69,12 +73,10 @@ def create_project():
 
         # Calculate estimates with error handling
         try:
-            estimates = calculateEstimates(
+            estimates = calculate_estimates(
                 project_id=new_project.project_id,
                 project_name=project_name,
                 project_size=project_size,
-                budget=budget,
-                timeline=timeline,
                 industry=industry,
                 additional_info=additional_info,
                 document_content=document_content
