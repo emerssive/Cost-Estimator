@@ -1,10 +1,10 @@
 from flask import Blueprint, request, current_app
 from config import db
 from models import Project
-from .utils import calculate_estimates
+from .calculateEstimates import calculate_estimates
 from file_utils import allowed_file, extract_text_from_txt, extract_text_from_docx, extract_text_from_pdf
 from flask import jsonify
-
+from .resourcesAllocation import resourceAllocation
 
 # Define the blueprint
 project_routes = Blueprint('project_routes', __name__)
@@ -55,9 +55,12 @@ def create_project():
             document_content=document_content
         )
 
+        resources = resourceAllocation(project_size=project_size)
+
         return jsonify({
             "message": f"Project '{project_name}' and estimates added successfully.",
-            "estimates": estimates
+            "estimates": estimates,
+            "resources" : resources
         })
 
     return "No file uploaded or file type is not allowed", 400
