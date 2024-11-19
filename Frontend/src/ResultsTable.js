@@ -22,6 +22,7 @@ function ResultsTable({ projectData }) {
         const updatedTasks = [...tasks];
         updatedTasks[taskIndex].subtasks[subtaskIndex][field] = value;
         setTasks(updatedTasks);
+        console.log('Updated tasks during change:', JSON.stringify(updatedTasks, null, 2)); // Log updated tasks
     };
 
     // Handle save action for a specific row
@@ -36,13 +37,16 @@ function ResultsTable({ projectData }) {
                 subtaskIndex,
                 message: 'Subtask name cannot be empty, and hours must be a positive number.',
             });
+            console.error('Validation error:', errors.message); // Log validation error
             return;
         }
 
         // Clear errors and exit editing mode
         setErrors({});
         setEditingRow({});
+        console.log('Updated tasks after save:', JSON.stringify(tasks, null, 2)); // Log updated tasks after saving
     };
+
 
     // Export to PDF
     const exportToPDF = () => {
@@ -231,6 +235,7 @@ function ResultsTable({ projectData }) {
                                     </td>
                                     <td className="edit-icon-cell">
                                         {isEditing ? (
+
                                             <button
                                                 className="save-button"
                                                 onClick={handleSave}
@@ -257,6 +262,13 @@ function ResultsTable({ projectData }) {
                     )}
                 </tbody>
             </table>
+
+            {errors.message && <p className="error">{errors.message}</p>}
+            <div className="actions">
+                <button className='export-button' onClick={exportToPDF}>Export to PDF</button>
+                <button className='export-button' onClick={exportToDOCX}>Export to DOCX</button>
+            </div>
+
         </div>
     );
 }
