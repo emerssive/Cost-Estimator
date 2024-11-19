@@ -8,6 +8,14 @@ function ResultsTable({ projectData }) {
     const [tasks, setTasks] = useState(projectData.tasks || []);
     const [editingRow, setEditingRow] = useState({}); // Track which row is being edited
     const [errors, setErrors] = useState({}); // Track errors for validation
+    const [hourlyRate, setHourlyRate] = useState(0); // Hourly rate for calculations
+
+    // Calculate total hours
+    const totalHours = tasks.reduce(
+        (sum, task) =>
+            sum + task.subtasks.reduce((subSum, subtask) => subSum + Number(subtask.hours || 0), 0),
+        0
+    );
 
     // Handle input changes during editing
     const handleChange = (taskIndex, subtaskIndex, field, value) => {
@@ -18,7 +26,8 @@ function ResultsTable({ projectData }) {
     };
 
     // Handle save action for a specific row
-    const handleSave = (taskIndex, subtaskIndex) => {
+    const handleSave = () => {
+        const { taskIndex, subtaskIndex } = editingRow;
         const subtask = tasks[taskIndex].subtasks[subtaskIndex];
 
         // Validate input
@@ -51,6 +60,11 @@ function ResultsTable({ projectData }) {
                 tableData.push(['', subtask, `${hours} hours`, comments || 'N/A']);
             });
         });
+
+        // Add summary rows
+        tableData.push(['', 'Total No. of Hours', `${totalHours} hours`, '']);
+        tableData.push(['', 'Hourly Rate', `$${hourlyRate}`, '']);
+        tableData.push(['', 'Total Cost', `$${(totalHours * hourlyRate).toFixed(2)}`, '']);
 
         autoTable(doc, {
             head: [['Task', 'Subtask', 'Development Hours', 'Comments']],
@@ -117,13 +131,23 @@ function ResultsTable({ projectData }) {
             });
 
             docContent.push(table);
-            docContent.push(
-                new Paragraph({
-                    text: '',
-                    spacing: { after: 400 },
-                })
-            );
         });
+
+        // Add summary
+        docContent.push(
+            new Paragraph({
+                text: `Total No. of Hours: ${totalHours}`,
+                spacing: { after: 200 },
+            }),
+            new Paragraph({
+                text: `Hourly Rate: $${hourlyRate}`,
+                spacing: { after: 200 },
+            }),
+            new Paragraph({
+                text: `Total Cost: $${(totalHours * hourlyRate).toFixed(2)}`,
+                spacing: { after: 200 },
+            })
+        );
 
         const doc = new Document({
             sections: [
@@ -155,7 +179,6 @@ function ResultsTable({ projectData }) {
                         <th>Subtask</th>
                         <th>Development Hours</th>
                         <th>Comments</th>
-                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -166,7 +189,10 @@ function ResultsTable({ projectData }) {
                                 editingRow.subtaskIndex === subIndex;
 
                             return (
-                                <tr key={`${taskIndex}-${subIndex}`}>
+                                <tr
+                                    key={`${taskIndex}-${subIndex}`}
+                                    className="hover-row"
+                                >
                                     <td>{subIndex === 0 ? taskItem.task : ''}</td>
                                     <td>
                                         {isEditing ? (
@@ -207,32 +233,27 @@ function ResultsTable({ projectData }) {
                                             subtask.comments || 'N/A'
                                         )}
                                     </td>
-                                    <td>
+                                    <td className="edit-icon-cell">
                                         {isEditing ? (
-                                            <>
-                                                <button
-                                                    className='action-button'
-                                                    onClick={() =>
-                                                        handleSave(taskIndex, subIndex)
-                                                    }
 
-                                                >
-                                                    Save
-                                                </button>
-                                            </>
-                                        ) : (
                                             <button
-                                                className='action-button'
+                                                className="save-button"
+                                                onClick={handleSave}
+                                            >
+                                                Save
+                                            </button>
+                                        ) : (
+                                            <span
+                                                className="edit-icon"
                                                 onClick={() =>
                                                     setEditingRow({
                                                         taskIndex,
-                                                        subtaskIndex: subIndex, // Correctly reference subIndex
+                                                        subtaskIndex: subIndex,
                                                     })
                                                 }
-
                                             >
-                                                Edit
-                                            </button>
+                                                ✏️
+                                            </span>
                                         )}
                                     </td>
                                 </tr>
@@ -241,11 +262,13 @@ function ResultsTable({ projectData }) {
                     )}
                 </tbody>
             </table>
+
             {errors.message && <p className="error">{errors.message}</p>}
             <div className="actions">
                 <button className='export-button' onClick={exportToPDF}>Export to PDF</button>
                 <button className='export-button' onClick={exportToDOCX}>Export to DOCX</button>
             </div>
+
         </div>
     );
 }

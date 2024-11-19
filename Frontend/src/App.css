@@ -1,22 +1,18 @@
-/* src/App.css */
-
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: #f0f4f8;
+  background-color: #F0F4F8;
   padding: 20px;
 }
-
 .form-container {
   width: 100%;
   max-width: 800px;
@@ -26,29 +22,24 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: opacity 0.3s ease;
 }
-
 .form-container.hidden {
   display: none;
 }
-
 .project-form h2 {
   font-size: 1.75em;
   margin-bottom: 20px;
   color: #333;
   text-align: center;
 }
-
 .form-group {
   margin-bottom: 20px;
 }
-
 .form-group label {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
   color: #555;
 }
-
 .form-group input,
 .form-group select,
 .form-group textarea {
@@ -59,9 +50,8 @@ body {
   font-size: 1em;
   box-sizing: border-box;
 }
-
 .submit-button {
-  background-color: #007bff;
+  background-color: #007BFF;
   color: white;
   padding: 12px 25px;
   border: none;
@@ -70,131 +60,126 @@ body {
   font-size: 1.1em;
   transition: background-color 0.3s;
 }
-
 .submit-button:hover {
-  background-color: #0056b3;
+  background-color: #0056B3;
 }
-
 .error {
-  color: #d9534f;
+  color: #D9534F;
   font-size: 0.9em;
 }
-
 .results-table {
   margin-top: 30px;
-  background-color: #ffffff;
+  background-color: #FFFFFF;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
-
 .results-table h3 {
   font-size: 1.5rem;
   margin-bottom: 15px;
   text-align: center;
 }
-
 .results-table table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
 }
-
 .results-table th,
 .results-table td {
   padding: 12px;
   border: 1px solid #ddd;
   text-align: left;
+  position: relative;
 }
-
-.results-table input {
-  width: 100%;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 0.9rem;
-}
-
-.actions {
-  margin-top: 20px;
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-}
-
-
-.action-button {
-  width: 100px; /* Set desired fixed width */
-  height: 40px; /* Set desired fixed height */
-  padding: 0; /* Remove padding as width/height take precedence */
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
-}
-
-.export-button{
-  width: 100px; /* Set desired fixed width */
-  height: 50px; /* Set desired fixed height */
-  padding: 0; /* Remove padding as width/height take precedence */
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
-}
-
-.action-button:hover {
-  background-color: #0056b3; /* Darker blue for hover effect */
-}
-
-
-.actions button:hover {
-  background-color: #0056b3;
-}
-
-.results-table tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
+/* Hover styling for rows */
 .results-table tr:hover {
-  background-color: #f1f1f1;
+  background-color: #F9F9F9; /* Light background on hover */
 }
-
+/* Edit icon styling */
+.edit-icon-cell {
+  position: relative;
+}
+.edit-icon {
+  display: inline-block;
+  visibility: hidden; /* Hide the icon by default */
+  font-size: 1.2em;
+  cursor: pointer;
+  color: #007BFF;
+  position: absolute;
+  right: 10px; /* Adjust to align at the end of the row */
+}
+.edit-icon:hover {
+  color: #0056B3;
+}
+/* Show the edit icon on row hover */
+.results-table tr:hover .edit-icon {
+  visibility: visible;
+}
+/* Save button styling */
+.save-button {
+  background-color: #007BFF;
+  color: white;
+  padding: 6px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s;
+  position: absolute;
+  right: 10px; /* Align with edit icon */
+}
+.save-button:hover {
+  background-color: #0056B3;
+}
+/* Export buttons styling */
+.export-buttons {
+  display: flex;
+  justify-content: flex-end; /* Align buttons to the right */
+  gap: 10px; /* Add spacing between buttons */
+  margin-top: 20px; /* Add spacing above the buttons */
+}
+.export-button {
+  display: inline-flex; /* Ensure the content stays on one line */
+  align-items: center; /* Vertically center the text */
+  justify-content: center; /* Horizontally center the text */
+  background-color: #007BFF;
+  color: white;
+  padding: 10px 20px; /* Adjust padding for readability */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem; /* Adjust font size for consistent text layout */
+  white-space: nowrap; /* Prevent text wrapping */
+  transition: background-color 0.3s ease;
+}
+.export-button:hover {
+  background-color: #0056B3; /* Darker blue for hover effect */
+}
+.results-table tr:nth-child(even) {
+  background-color: #F2F2F2;
+}
 .results-table td {
   word-wrap: break-word;
 }
-
 .summary {
   margin-top: 30px;
   font-size: 16px;
   text-align: center;
 }
-
 .summary ul {
   list-style: none;
   padding: 0;
 }
-
 .summary li {
   margin-bottom: 15px;
 }
-
 .summary li strong {
   color: #333;
 }
-
-/* src/App.css */
-
 .error-card {
-  background-color: #f8d7da;
-  border-left: 5px solid #f5c6cb;
-  color: #721c24;
+  background-color: #F8D7DA;
+  border-left: 5px solid #F5C6CB;
+  color: #721C24;
   padding: 15px;
   margin-bottom: 20px;
   border-radius: 4px;
@@ -203,24 +188,21 @@ body {
   max-width: 600px;
   width: 100%;
 }
-
 .error-card .error-message {
   margin: 0;
   font-weight: bold;
 }
-
 .error-card .error-details {
   font-size: 0.9em;
-  color: #8a2a2a;
+  color: #8A2A2A;
 }
-
 .error-card .close-btn {
   position: absolute;
   top: 10px;
   right: 10px;
   background: transparent;
   border: none;
-  color: #721c24;
+  color: #721C24;
   font-size: 1.2em;
   cursor: pointer;
   padding: 0;
