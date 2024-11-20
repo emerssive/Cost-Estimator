@@ -96,7 +96,7 @@ function ProjectForm() {
 
         try {
             // Send the form data to the backend
-            const response = await axios.post('https://6497-2400-adc5-116-a500-00-2.ngrok-free.app/projectDetails', formData, {
+            const response = await axios.post('https://a78e-2400-adc5-116-a500-00-2.ngrok-free.app/projectDetails', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -242,7 +242,7 @@ function ProjectForm() {
                     {errors.fileUpload && <p className="error">{errors.fileUpload}</p>}
                 </div>
 
-                <button type="submit" className="submit-button">Submit</button>
+                <button type="submit" className="action-button">Submit</button>
             </form>
 
             {/* Loading Bar */}
