@@ -22,7 +22,7 @@ function ProjectForm() {
     const [loading, setLoading] = useState(false);
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
-
+    const [resources, setResources] = useState(null);
 
     const validateFields = () => {
         const newErrors = {};
@@ -96,7 +96,7 @@ function ProjectForm() {
 
         try {
             // Send the form data to the backend
-            const response = await axios.post('https://a78e-2400-adc5-116-a500-00-2.ngrok-free.app/projectDetails', formData, {
+            const response = await axios.post('https://7bda-2400-adc5-116-a500-00-2.ngrok-free.app/projectDetails', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -104,6 +104,7 @@ function ProjectForm() {
 
             if (response.data.success) {
                 setEstimates(response.data.data.estimates);
+                setResources(response.data.data.resources);
                 setSnackbarMessage('Project estimates calculated successfully!');
                 setSnackbarSeverity('success');
             } else {
@@ -268,7 +269,7 @@ function ProjectForm() {
             </Snackbar>
 
             {/* Display the estimates in ResultsTable if available */}
-            {estimates && <ResultsTable projectData={estimates} />}
+            {estimates && <ResultsTable projectData={estimates} resources={resources}/>}
         </div>
     );
 }
