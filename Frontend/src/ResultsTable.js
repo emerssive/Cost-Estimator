@@ -10,10 +10,8 @@ function ResultsTable({ projectData, resources }) {
     const [editingRow, setEditingRow] = useState({});
     const [errors, setErrors] = useState({});
     const [hourlyRate, setHourlyRate] = useState(0);
-
-    // Extract the allocations from the first element of the resources array
-    const allocations = resources && Array.isArray(resources[0]) ? resources[0] : [];
-    console.log(allocations.Array);
+    const allocations = useState(resources || []);
+    console.log("bilal", allocations);
     const totalHours = tasks.reduce(
         (sum, task) =>
             sum + task.subtasks.reduce((subSum, subtask) => subSum + Number(subtask.hours || 0), 0),
@@ -24,6 +22,7 @@ function ResultsTable({ projectData, resources }) {
         const updatedTasks = [...tasks];
         updatedTasks[taskIndex].subtasks[subtaskIndex][field] = value;
         setTasks(updatedTasks);
+        console.log('Updated tasks during change:', JSON.stringify(updatedTasks, null, 2));
     };
 
     const handleSave = (taskIndex, subtaskIndex) => {
@@ -254,9 +253,31 @@ function ResultsTable({ projectData, resources }) {
                             );
                         })
                     )}
+                    {/* Summary Rows */}
+                    <tr className="summary-row">
+                        <td colSpan="2"><strong>Total No. of Hours</strong></td>
+                        <td colSpan="3">{totalHours} hours</td>
+                    </tr>
+                    <tr className="summary-row">
+                        <td colSpan="2"><strong>Hourly Rate</strong></td>
+                        <td colSpan="3">
+                            <input
+                                type="number"
+                                value={hourlyRate}
+                                onChange={(e) => setHourlyRate(Number(e.target.value))}
+                                placeholder="Enter rate"
+                                className="rate-input"
+                            />
+                        </td>
+                    </tr>
+                    <tr className="summary-row">
+                        <td colSpan="2"><strong>Total Cost</strong></td>
+                        <td colSpan="3">${(totalHours * hourlyRate).toFixed(2)}</td>
+                    </tr>
                 </tbody>
             </table>
 
+            {/* Resources Section */}
             <div className="resources-section">
                 <h3>Resources Allocation</h3>
                 <table>
@@ -271,18 +292,18 @@ function ResultsTable({ projectData, resources }) {
                     <tbody>
                         {allocations.map((resource, index) => (
                             <tr key={index}>
-                                <td>{resource.role}</td>
-                                <td>{resource.engagement_type}</td>
-                                <td>{resource.allocation_percentage}%</td>
-                                <td>{resource.units}</td>
+                                <td>{allocations.role}</td>
+                                <td>{allocations.engagement_type}</td>
+                                <td>{allocations.allocation_percentage}%</td>
+                                <td>{allocations.units}</td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
-
+            
             {errors.message && <p className="error">{errors.message}</p>}
-
+            
             <div className="export-buttons">
                 <button className="action-button" onClick={exportToPDF}>
                     Export to PDF
