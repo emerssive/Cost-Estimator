@@ -1,47 +1,103 @@
-# Cost Estimator Tool
+# 💰 Cost Estimator Tool
 
-## Project Overview
+## 🎯 Overview
 
-The **Cost Estimator Tool** is a web-based application designed to help sales teams quickly generate project cost estimates. The tool asks critical project questions, allows users to upload requirement documents, and provides a cost estimate based on predefined rules. All input and output data are stored for future learning and improvement of the estimation logic.
+An AI-powered cost estimation tool using Claude 3.5 Sonnet LLM to analyze project requirements and generate detailed task breakdowns with resource allocations. Designed for sales teams to quickly generate accurate project estimates.
 
-## Key Features
+## ⭐ Features
 
-- **Project Form**: Collects critical project details such as size, budget, timeline, and additional information.
-- **Document Upload**: Allows users to upload project requirement documents in `.txt`, `.docx`, or `.pdf` formats. The tool extracts text from these documents to assist in generating estimates.
-- **Cost Estimation**: Generates a detailed breakdown of tasks, subtasks, and development hours.
-- **Data Storage**: Stores all input data and generated estimates for future machine learning or data analysis.
+* 🤖 **Project Analysis**: Generates tasks and subtasks from requirements documents
+* 👥 **Resource Planning**: Allocates developers and effort percentages
+* 📊 **Project Sizes**:
+  * 🟢 Small (0-40 hours)
+  * 🟡 Medium (120-300 hours)
+  * 🟠 Large (300-600 hours)
+  * 🔴 Enterprise (600+ hours)
 
-## Technologies Used
+## 🔧 Prerequisites
 
-- **Frontend**: React.js, Tailwind CSS
-- **Backend**: Python (Flask or Django)
-- **Database**: PostgreSQL
+* 🐍 Python 3.7+
+* 🗄️ PostgreSQL
+* 🔑 Anthropic API key
 
-## Getting Started
+## ⚡ Setup Instructions
 
-### Prerequisites
+### 🔙 Backend Setup
 
-- Node.js and npm installed
-- Python 3.7+ and Flask/Django installed
-- PostgreSQL database setup
+```bash
+# Navigate to backend directory
+cd backend
 
-### Installation
+# Create and activate virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: .\venv\Scripts\activate
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/cost-estimator-tool.git
-   
-2. Set up Frontend
-   ```bash
-   cd frotnend
-   npm install
-   
-3. Backend Setup
-   ```bash
-   cd backend
-   pip install -r requirements.txt
-   
-4. Start servers:   
-   ```bash
-   python app.py
-   npm start
+# Install dependencies
+pip install -r requirements.txt
+
+# Create .env file
+echo "CLAUDE_API_KEY=your_anthropic_api_key
+DATABASE_URL=postgresql://username:password@localhost:5432/dbname" > .env
+
+# Start backend server
+python app.py
+```
+
+### 🖥️ Frontend Setup
+
+```bash
+# Navigate to frontend directory
+cd frontend
+
+# Install dependencies
+npm install
+
+# Start development server
+npm start
+```
+
+## 📝 Project Parameters
+
+### 📥 Required Input
+1. 📋 **Project Name**
+2. 📏 **Project Size** (Small/Medium/Large/Enterprise)
+3. ⏰ **Timeline** in weeks
+4. 🛠️ **Tech Stack**: Tools, frameworks, and languages
+5. 📄 **Requirements Document** (Upload)
+
+### 📤 Output Generated
+* ✅ Task breakdown with time estimates
+* 👥 Resource allocation (Frontend/Backend developers)
+* ⏱️ Development time estimates and comments
+* 📊 Resource allocation percentages
+
+## ⚙️ Environment Configuration
+
+Create a `.env` file with:
+```plaintext
+CLAUDE_API_KEY=your_anthropic_api_key
+DATABASE_URL=postgresql://username:password@localhost:5432/dbname
+```
+
+## 🚀 Quick Start Guide
+
+```bash
+# Clone repository
+git clone https://github.com/yourusername/cost-estimator.git
+cd cost-estimator
+
+# Setup backend
+cd backend
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+# Setup frontend
+cd ../frontend
+npm install
+npm start
+```
+
+## 🆘 Support
+
+* 🐛 Create an issue in the GitHub repository
