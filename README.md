@@ -35,10 +35,6 @@ source venv/bin/activate  # On Windows: .\venv\Scripts\activate
 # Install dependencies
 pip install -r requirements.txt
 
-# Create .env file
-echo "CLAUDE_API_KEY=your_anthropic_api_key
-DATABASE_URL=postgresql://username:password@localhost:5432/dbname" > .env
-
 # Start backend server
 python app.py
 ```
@@ -56,6 +52,15 @@ npm install
 npm start
 ```
 
+## ⚙️ Environment Configuration
+
+Create a `.env` file with:
+```plaintext
+CLAUDE_API_KEY=your_anthropic_api_key
+DATABASE_URL=postgresql://username:password@localhost:5432/dbname
+```
+
+
 ## 📝 Project Parameters
 
 ### 📥 Required Input
@@ -71,32 +76,6 @@ npm start
 * ⏱️ Development time estimates and comments
 * 📊 Resource allocation percentages
 
-## ⚙️ Environment Configuration
-
-Create a `.env` file with:
-```plaintext
-CLAUDE_API_KEY=your_anthropic_api_key
-DATABASE_URL=postgresql://username:password@localhost:5432/dbname
-```
-
-## 🚀 Quick Start Guide
-
-```bash
-# Clone repository
-git clone https://github.com/yourusername/cost-estimator.git
-cd cost-estimator
-
-# Setup backend
-cd backend
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-
-# Setup frontend
-cd ../frontend
-npm install
-npm start
-```
 
 ## 🆘 Support
 
