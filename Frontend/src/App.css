@@ -324,3 +324,81 @@ body {
     width: 100%;
   }
 }
+
+/* Resources Section Styles */
+.resources-section {
+    margin-top: 40px;
+    border-top: 2px solid #e5e7eb;
+    padding-top: 20px;
+}
+
+.resources-section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    text-align: center;
+    color: #333;
+}
+
+.resources-section table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background-color: white;
+}
+
+.resources-section th {
+    background-color: #f8f9fa;
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #dee2e6;
+    font-weight: 600;
+    color: #333;
+}
+
+.resources-section td {
+    padding: 12px;
+    border: 1px solid #dee2e6;
+    text-align: left;
+}
+
+.resources-section tr {
+    transition: background-color 0.2s ease;
+}
+
+.resources-section tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+.resources-section tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Empty state styling */
+.resources-section .text-center {
+    text-align: center;
+    padding: 1rem;
+    color: #6b7280;
+}
+
+/* Make resources table responsive */
+@media (max-width: 768px) {
+    .resources-section {
+        margin-top: 30px;
+        padding-top: 15px;
+    }
+
+    .resources-section table {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .resources-section th,
+    .resources-section td {
+        white-space: nowrap;
+        padding: 8px;
+    }
+
+    .resources-section h3 {
+        font-size: 1.25rem;
+    }
+}

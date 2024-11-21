@@ -10,7 +10,7 @@ function ResultsTable({ projectData, resources }) {
     const [editingRow, setEditingRow] = useState({});
     const [errors, setErrors] = useState({});
     const [hourlyRate, setHourlyRate] = useState(0);
-    const allocations = useState(resources || []);
+    const [allocations] = useState(resources || []);
     console.log("bilal", allocations);
     const totalHours = tasks.reduce(
         (sum, task) =>
@@ -290,14 +290,20 @@ function ResultsTable({ projectData, resources }) {
                         </tr>
                     </thead>
                     <tbody>
-                        {allocations.map((resource, index) => (
-                            <tr key={index}>
-                                <td>{allocations.role}</td>
-                                <td>{allocations.engagement_type}</td>
-                                <td>{allocations.allocation_percentage}%</td>
-                                <td>{allocations.units}</td>
+                        {allocations && allocations.length > 0 ? (
+                            allocations.map((resource, index) => (
+                                <tr key={index}>
+                                    <td>{resource.role}</td>
+                                    <td>{resource.engagement_type}</td>
+                                    <td>{resource.allocation_percentage}%</td>
+                                    <td>{resource.units}</td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="4" className="text-center">No resources allocated</td>
                             </tr>
-                        ))}
+                        )}
                     </tbody>
                 </table>
             </div>
