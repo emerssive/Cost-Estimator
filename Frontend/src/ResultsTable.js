@@ -3,52 +3,44 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { Document, Packer, Paragraph, Table, TableCell, TableRow } from 'docx';
 import { saveAs } from 'file-saver';
+import { Pencil, Check } from 'lucide-react';
 
-function ResultsTable({ projectData }) {
+function ResultsTable({ projectData, resources }) {
     const [tasks, setTasks] = useState(projectData.tasks || []);
-    const [editingRow, setEditingRow] = useState({}); // Track which row is being edited
-    const [errors, setErrors] = useState({}); // Track errors for validation
-    const [hourlyRate, setHourlyRate] = useState(0); // Hourly rate for calculations
-
-    // Calculate total hours
+    const [editingRow, setEditingRow] = useState({});
+    const [errors, setErrors] = useState({});
+    const [hourlyRate, setHourlyRate] = useState(0);
+    const [allocations] = useState(resources || []);
+    console.log("bilal", allocations);
     const totalHours = tasks.reduce(
         (sum, task) =>
             sum + task.subtasks.reduce((subSum, subtask) => subSum + Number(subtask.hours || 0), 0),
         0
     );
 
-    // Handle input changes during editing
     const handleChange = (taskIndex, subtaskIndex, field, value) => {
         const updatedTasks = [...tasks];
         updatedTasks[taskIndex].subtasks[subtaskIndex][field] = value;
         setTasks(updatedTasks);
-        console.log('Updated tasks during change:', JSON.stringify(updatedTasks, null, 2)); // Log updated tasks
+        console.log('Updated tasks during change:', JSON.stringify(updatedTasks, null, 2));
     };
 
-    // Handle save action for a specific row
-    const handleSave = () => {
-        const { taskIndex, subtaskIndex } = editingRow;
+    const handleSave = (taskIndex, subtaskIndex) => {
         const subtask = tasks[taskIndex].subtasks[subtaskIndex];
 
-        // Validate input
         if (!subtask.subtask || subtask.hours <= 0 || isNaN(subtask.hours)) {
             setErrors({
                 taskIndex,
                 subtaskIndex,
                 message: 'Subtask name cannot be empty, and hours must be a positive number.',
             });
-            console.error('Validation error:', errors.message); // Log validation error
             return;
         }
 
-        // Clear errors and exit editing mode
         setErrors({});
         setEditingRow({});
-        console.log('Updated tasks after save:', JSON.stringify(tasks, null, 2)); // Log updated tasks after saving
     };
 
-
-    // Export to PDF
     const exportToPDF = () => {
         const doc = new jsPDF();
         doc.text('Project Task Details', 14, 20);
@@ -61,7 +53,6 @@ function ResultsTable({ projectData }) {
             });
         });
 
-        // Add summary rows
         tableData.push(['', 'Total No. of Hours', `${totalHours} hours`, '']);
         tableData.push(['', 'Hourly Rate', `$${hourlyRate}`, '']);
         tableData.push(['', 'Total Cost', `$${(totalHours * hourlyRate).toFixed(2)}`, '']);
@@ -78,7 +69,6 @@ function ResultsTable({ projectData }) {
         doc.save('Project_Estimates.pdf');
     };
 
-    // Export to DOCX
     const exportToDOCX = () => {
         const docContent = [];
 
@@ -133,7 +123,6 @@ function ResultsTable({ projectData }) {
             docContent.push(table);
         });
 
-        // Add summary
         docContent.push(
             new Paragraph({
                 text: `Total No. of Hours: ${totalHours}`,
@@ -179,6 +168,7 @@ function ResultsTable({ projectData }) {
                         <th>Subtask</th>
                         <th>Development Hours</th>
                         <th>Comments</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -189,10 +179,7 @@ function ResultsTable({ projectData }) {
                                 editingRow.subtaskIndex === subIndex;
 
                             return (
-                                <tr
-                                    key={`${taskIndex}-${subIndex}`}
-                                    className="hover-row"
-                                >
+                                <tr key={`${taskIndex}-${subIndex}`}>
                                     <td>{subIndex === 0 ? taskItem.task : ''}</td>
                                     <td>
                                         {isEditing ? (
@@ -202,6 +189,7 @@ function ResultsTable({ projectData }) {
                                                 onChange={(e) =>
                                                     handleChange(taskIndex, subIndex, 'subtask', e.target.value)
                                                 }
+                                                className="edit-input"
                                             />
                                         ) : (
                                             subtask.subtask
@@ -215,6 +203,7 @@ function ResultsTable({ projectData }) {
                                                 onChange={(e) =>
                                                     handleChange(taskIndex, subIndex, 'hours', e.target.value)
                                                 }
+                                                className="edit-input"
                                             />
                                         ) : (
                                             `${subtask.hours} hours`
@@ -228,47 +217,107 @@ function ResultsTable({ projectData }) {
                                                 onChange={(e) =>
                                                     handleChange(taskIndex, subIndex, 'comments', e.target.value)
                                                 }
+                                                className="edit-input"
                                             />
                                         ) : (
                                             subtask.comments || 'N/A'
                                         )}
                                     </td>
-                                    <td className="edit-icon-cell">
-                                        {isEditing ? (
-
-                                            <button
-                                                className="save-button"
-                                                onClick={handleSave}
-                                            >
-                                                Save
-                                            </button>
-                                        ) : (
-                                            <span
-                                                className="edit-icon"
-                                                onClick={() =>
-                                                    setEditingRow({
-                                                        taskIndex,
-                                                        subtaskIndex: subIndex,
-                                                    })
-                                                }
-                                            >
-                                                ✏️
-                                            </span>
-                                        )}
+                                    <td>
+                                        <div className="action-cell">
+                                            {isEditing ? (
+                                                <button
+                                                    onClick={() => handleSave(taskIndex, subIndex)}
+                                                    className="save-button"
+                                                    title="Save changes"
+                                                >
+                                                    <Check size={16} />
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    onClick={() =>
+                                                        setEditingRow({
+                                                            taskIndex,
+                                                            subtaskIndex: subIndex,
+                                                        })
+                                                    }
+                                                    className="edit-button"
+                                                    title="Edit row"
+                                                >
+                                                    <Pencil size={16} />
+                                                </button>
+                                            )}
+                                        </div>
                                     </td>
                                 </tr>
                             );
                         })
                     )}
+                    {/* Summary Rows */}
+                    <tr className="summary-row">
+                        <td colSpan="2"><strong>Total No. of Hours</strong></td>
+                        <td colSpan="3">{totalHours} hours</td>
+                    </tr>
+                    <tr className="summary-row">
+                        <td colSpan="2"><strong>Hourly Rate</strong></td>
+                        <td colSpan="3">
+                            <input
+                                type="number"
+                                value={hourlyRate}
+                                onChange={(e) => setHourlyRate(Number(e.target.value))}
+                                placeholder="Enter rate"
+                                className="rate-input"
+                            />
+                        </td>
+                    </tr>
+                    <tr className="summary-row">
+                        <td colSpan="2"><strong>Total Cost</strong></td>
+                        <td colSpan="3">${(totalHours * hourlyRate).toFixed(2)}</td>
+                    </tr>
                 </tbody>
             </table>
 
-            {errors.message && <p className="error">{errors.message}</p>}
-            <div className="actions">
-                <button className='export-button' onClick={exportToPDF}>Export to PDF</button>
-                <button className='export-button' onClick={exportToDOCX}>Export to DOCX</button>
+            {/* Resources Section */}
+            <div className="resources-section">
+                <h3>Resources Allocation</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Role</th>
+                            <th>Engagement Type</th>
+                            <th>Allocation Percentage</th>
+                            <th>Units</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {allocations && allocations.length > 0 ? (
+                            allocations.map((resource, index) => (
+                                <tr key={index}>
+                                    <td>{resource.role}</td>
+                                    <td>{resource.engagement_type}</td>
+                                    <td>{resource.allocation_percentage}%</td>
+                                    <td>{resource.units}</td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="4" className="text-center">No resources allocated</td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
             </div>
-
+            
+            {errors.message && <p className="error">{errors.message}</p>}
+            
+            <div className="export-buttons">
+                <button className="action-button" onClick={exportToPDF}>
+                    Export to PDF
+                </button>
+                <button className="action-button" onClick={exportToDOCX}>
+                    Export to DOCX
+                </button>
+            </div>
         </div>
     );
 }
