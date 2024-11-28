@@ -46,10 +46,10 @@ python app.py
 cd frontend
 
 # Install dependencies
-npm install
+npm i
 
 # Start development server
-npm start
+npm run dev
 ```
 
 ## ⚙️ Environment Configuration
