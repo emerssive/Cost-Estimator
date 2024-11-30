@@ -224,10 +224,13 @@ export function ProjectForm({ onEstimateComplete }: { onEstimateComplete: (data:
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="technology">Technology</SelectItem>
-                        <SelectItem value="healthcare">Healthcare</SelectItem>
+                        <SelectItem value="e_commerce">E Commerce</SelectItem>
+                        <SelectItem value="software_development">Software Development</SelectItem>
                         <SelectItem value="finance">Finance</SelectItem>
-                        <SelectItem value="retail">Retail</SelectItem>
+                        <SelectItem value="healthcare">Health Care</SelectItem>
+                        <SelectItem value="education">Education</SelectItem>
+                        <SelectItem value="real_estate">Real Estate</SelectItem>
+                        <SelectItem value="manufacturing">Manufacturing</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
