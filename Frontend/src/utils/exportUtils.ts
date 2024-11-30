@@ -2,6 +2,7 @@ import jsPDF from "jspdf";
 import autoTable from 'jspdf-autotable';
 import { Document, Packer, Paragraph, Table, TableRow, TableCell, HeadingLevel, AlignmentType, WidthType, BorderStyle, TextRun } from "docx";
 import { saveAs } from "file-saver";
+import { format } from 'date-fns';
 
 // Define interface to match the actual data structure
 interface EstimateData {
@@ -131,7 +132,8 @@ export const exportToPDF = (data: EstimateData) => {
       margin: { left: margin, right: margin }
     });
 
-    doc.save("project-estimate.pdf");
+    const timestamp = format(new Date(), 'dd_MM_HH_mm');
+    doc.save(`Estimate_${timestamp}.pdf`);
   } catch (error) {
     console.error("Error exporting PDF:", error);
   }
@@ -377,9 +379,11 @@ export const exportToDOCX = async (data: EstimateData) => {
         ],
       }],
     });
-
+    
+    
     const blob = await Packer.toBlob(doc);
-    saveAs(blob, "project-estimate.docx");
+    const timestamp = format(new Date(), 'dd_MM_HH_mm');
+    saveAs(blob, `Estimate_${timestamp}.docx`);
   } catch (error) {
     console.error("Error exporting DOCX:", error);
   }
